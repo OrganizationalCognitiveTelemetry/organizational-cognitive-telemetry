@@ -142,22 +142,14 @@ Contributions should align with them.
 
 ### Contributing
 
-Contributions are welcome for:
-- taxonomy refinement,
-- telemetry schemas,
-- reporting concepts,
-- documentation improvements.
-
-Please see **CONTRIBUTING.md** for contribution guidelines.
+We welcome contributions to expand and improve the System Architecture Manifest project. If you’re interested, please check out the **[contributing guidelines](./CONTRIBUTING.md)** for more information.
 
 ### Contact
 
-- **Author:** William Shostak  
-- **GitHub:** https://github.com/wshostak
+- **Author:** William Shostak (https://github.com/wshostak)
 
 ### License
 
-This project is licensed under the **ISC License**.  
-See the **LICENSE** file for details.
+This project is licensed under the **ISC License** — see the **[LICENSE](./LICENSE.txt)** file for more details.
 
 Copyright (c) 2025 William Shostak
