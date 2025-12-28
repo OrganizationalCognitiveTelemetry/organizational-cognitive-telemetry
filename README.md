@@ -142,7 +142,7 @@ Contributions should align with them.
 
 ### Contributing
 
-We welcome contributions to expand and improve the System Architecture Manifest project. If you’re interested, please check out the **[contributing guidelines](./CONTRIBUTING.md)** for more information.
+We welcome contributions to expand and improve the Organizational Cognitive Telemetry project. If you’re interested, please check out the **[contributing guidelines](./CONTRIBUTING.md)** for more information.
 
 ### Contact
 
