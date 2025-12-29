@@ -1,144 +1,187 @@
 # OCT — Organizational Cognitive Telemetry
 
-> A system for observing, classifying, and improving how organizations think and interact with AI.
+> A telemetry and insight system that surfaces cognitive friction and knowledge gaps across an organization — **without storing prompts**.
 
 ## Canonical Definition
 
-**Organizational Cognitive Telemetry (OCT)** is a telemetry and insight system designed to capture **sanitized AI interaction signals** in order to surface cognitive friction, knowledge gaps, and recurring patterns across an organization.
+**Organizational Cognitive Telemetry (OCT)** is a telemetry and insight system designed to capture **sanitized AI interaction signals** in order to surface **cognitive friction, knowledge gaps, and recurring patterns** across an organization.
 
-OCT records **every prompt** submitted to the system, removes confidential and identifying information, preserves **sequence order**, retains the **date**, and intentionally omits **precise timestamps**. This allows OCT to identify trends and breakdowns in understanding without becoming a surveillance or logging system.
-
-OCT is focused on **organizational awareness**, not content storage.
+OCT treats prompts as **transient inputs**, not records. Prompts exist only long enough to derive **non-identifying, organizational artifacts** (failure-mode summaries, trend states, confidence metrics). OCT is focused on **organizational awareness**, not content storage, surveillance, replay, or audit trails.
 
 ### Why OCT Exists
 
-As AI adoption increases, organizations struggle to see:
+As AI adoption scales, organizations lose visibility into:
 - where confusion repeats,
-- which knowledge is missing or unclear,
-- how workflows break down,
-- and why AI responses fail to land.
+- what documentation is missing or unclear,
+- which workflows produce consistent friction,
+- why AI responses fail to land.
 
 Traditional logs answer *what happened*.  
-OCT answers *where understanding breaks down*.
+OCT answers **where understanding breaks down** — while remaining **non-surveillant by design**.
 
-### What OCT Is
+### Prompt Ephemerality as a Design Feature
 
-OCT captures:
-- sanitized prompt text,
-- relative ordering of prompts,
-- date-level activity,
-- classification metadata (e.g. noise, friction, input error),
-- topic or ontology tags,
-- non-identifying correlation references.
+In OCT, prompts are **transient inputs**, not records.
 
-OCT is consumed by:
-- internal reporting tools,
-- system designers,
-- workflow and documentation owners,
-- leadership and governance reviews.
+They exist only long enough to:
+1. be classified (**noise** | **issue** | **input-error**)
+2. be matched to an existing failure mode, or
+3. initialize a new failure-mode candidate
 
-### What OCT Is Not
+After that, prompts are discarded.
 
-OCT is intentionally **not**:
-- a chat transcript archive,
-- a document repository,
-- a monitoring or surveillance tool,
-- a data lake,
-- a replacement for operational logs.
+- **No replay**
+- **No lookup**
+- **No audit trail**
 
-It stores **signals and patterns**, not raw data.
+This is not a limitation — it is OCT’s **safety guarantee**.
 
-### Core Design Principles
+### OCT Data Lifecycle
 
-#### Insight Over Surveillance
-OCT is designed to surface patterns, not track individuals.
+#### 1) Pre-classification — *Ephemeral*
+- prompt arrives
+- model returns one of: `noise | issue | input-error`
+- no logging, no embeddings, no persistence
+
+If `noise` → prompt is immediately discarded.
+
+#### 2) Redaction
+- runs only for `issue` and `input-error`
+- removes identifying and sensitive content
+- operates entirely in-memory
+
+#### 3) Failure-Type Classification
+- classify into domain-specific failure categories
+- produces classification signals only
+
+#### 4) Resolution
+- attempt failure-mode match
+- similarity + domain + class check
+
+**Branch:**
+- match found → update summary
+- no match → create new *emerging* failure-mode candidate
+
+#### 5) Persist — *Derived Only*
+
+**What gets stored:**
+- failure-mode summaries
+- derived trend indicators (or aggregate trend indicators)
+- trend states
+- confidence metrics
+
+**What never gets stored:**
+- raw prompts
+- redacted prompts
+- embeddings tied to prompts
+- per-event logs
+
+Only **derived organizational artifacts** are durable.
+
+### One Crucial Guardrail: Summary Creation Thresholds
+
+Because prompts disappear, summary creation rules must be hardened.
+
+**Required invariant:** a new failure mode may only be created or promoted if it meets a minimum signal threshold.
+
+Example thresholds:
+- appears **twice within 7 days**, or
+- exceeds similarity confidence **X**
+
+Recommended states:
+- `state = emerging` (candidate)
+- `state = active` (confirmed)
+
+This prevents:
+- one-off curiosity creating permanent artifacts
+- “summary spam” from transient signals
+
+### What OCT Produces
+
+OCT outputs **indicators**, not content:
+
+- failure-mode summaries (human-readable)
+- trend signals and states
+- confidence metrics
+- aggregated “where we get stuck” maps
+
+These artifacts are designed to be consumed by:
+- documentation owners
+- process/workflow designers
+- training enablement
+- architecture and governance reviews
+
+### What OCT Explicitly Does Not Do
+
+OCT is not:
+- a chat transcript archive
+- a prompt search engine
+- an employee monitoring system
+- a replay/logging system
+- a data lake of user interactions
+
+OCT stores **patterns**, not people.
+
+### Why This Matters
+
+#### 1) Surveillance Risk Drops to Near Zero
+Without prompts:
 - no identity reconstruction
-- no user-level replay
-- no minute-by-minute activity tracking
+- no behavioral replay
+- no fishing expeditions
 
-#### Sanitized by Default
-All prompts are scrubbed before storage:
-- no PII
-- no credentials
-- no confidential identifiers
+Even with admin access, there is nothing sensitive to inspect.
 
-Sanitization occurs **before persistence**.
+#### 2) Governance Becomes Simple
+You can truthfully say:
 
-#### Order Without Precision
-OCT preserves conversational flow without temporal overreach:
-- prompts are stored in order,
-- date is retained,
-- timestamps are removed.
+> “We do not store prompts. We store indicators.”
 
-#### Security as a Prerequisite
-OCT never widens access.
-- all data has already passed permission checks upstream,
-- OCT introduces no new visibility paths.
+#### 3) Retention & Compliance Become Trivial
+- no deletion policies needed
+- no subject access requests
+- no legal hold complications
 
-### Core OCT Domains
+Summaries are organizational artifacts, not personal data.
 
-#### Cognitive Friction
-Signals where users or systems struggle:
-- repeated clarification
-- low-confidence outcomes
-- malformed or ambiguous prompts
+#### 4) Engineering Simplicity
+- no large indexes
+- no vector store growth
+- no backfills
+- no query tuning
 
-#### Noise Detection
-Identifies:
-- low-signal usage,
-- misdirected questions,
-- non-actionable prompts.
+OCT stays lightweight and durable.
 
-#### Design & Knowledge Gaps
-Surfaces:
-- missing documentation,
-- unclear ownership,
-- inconsistent terminology,
-- broken or absent workflows.
+### Subtle but Powerful Side Effect
 
-#### Usage Patterns
-Aggregated views of:
-- topic recurrence,
-- escalation zones,
-- cross-team overlap.
+Because summaries are the only durable object:
+- documentation work closes failure modes
+- training reduces input-error modes
+- resolved issues fade out of existence
 
-### Data Lifecycle & Retention
+The organization’s understanding becomes **self-healing**.
 
-OCT follows **least-retention principles**:
-- no raw sensitive content,
-- no long-lived identity data,
-- evolving aggregates instead of growing logs.
+### Architecture & Boundaries
 
-Operational debug logs remain separate and short-lived.
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** — contracts, invariants, lifecycle rules, anti-patterns
+- **[NON_GOALS.md](NON_GOALS.md)** — explicit scope boundaries
 
-### Intended Use
+These documents are intended to be **normative** for OCT.
 
-OCT is intended to support:
-- system improvement,
-- documentation prioritization,
-- workflow tuning,
-- organizational clarity.
+### Prompt Contracts (Normative)
 
-It is not intended for:
-- employee performance monitoring,
-- compliance replay,
-- individual behavior analysis.
+OCT’s processing pipeline is defined by a set of **normative prompt contracts**.
+These prompts specify behavioral guarantees and invariants, not implementation details.
 
-### Design & Specifications
+Located in `./ai/`:
 
-The following documents define OCT’s architectural boundaries and invariants:
+- `prompt-preclassify-scaffolding.md` — ephemeral pre-classification (`noise | issue | input-error`)
+- `prompt-redaction-scaffolding.md` — in-memory sanitization and redaction
+- `prompt-failure-type-classify-scaffolding.md` — post-redaction failure-type classification
+- `prompt-summary-update-scaffolding.md` — constrained update of existing failure-mode summaries
+- `prompt-summary-create-scaffolding.md` — creation of new emerging failure-mode summaries
 
-- **[ARCHITECTURE.md](ARCHITECTURE.md)**  
-  Describes what feeds OCT, what it records, what it emits, and what it explicitly does not do.
-
-- **[NON_GOALS.md](NON_GOALS.md)**  
-  Lists out-of-scope responsibilities to prevent scope creep and misuse.
-
-- **[ai/prompt-redaction-scaffolding.md](ai/prompt-redaction-scaffolding.md)**  
-  Canonical specification for prompt sanitization and redaction prior to OCT persistence.
-
-These documents are considered **foundational**.  
-Contributions should align with them.
+These files are **normative**. Any OCT-compliant implementation MUST honor their constraints and invariants.
 
 ### Contributing
 

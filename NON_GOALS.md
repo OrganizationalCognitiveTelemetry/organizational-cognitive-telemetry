@@ -3,8 +3,6 @@
 This document lists **explicit non-goals** for OCT.
 Anything listed here is intentionally out of scope.
 
----
-
 ## OCT Is Not
 
 - A chat transcript archive
@@ -19,8 +17,6 @@ Anything listed here is intentionally out of scope.
 - A workflow executor
 - A reasoning or planning engine
 
----
-
 ## OCT Will Not
 
 - Store raw or unredacted prompts
@@ -32,8 +28,6 @@ Anything listed here is intentionally out of scope.
 - Replace operational audit logs
 - Make access control decisions
 
----
-
 ## Design Guardrail
 
 If a proposed feature requires:
@@ -44,8 +38,6 @@ If a proposed feature requires:
 - or user-level metrics
 
 then it does **not** belong in OCT.
-
----
 
 ## Invariant
 
